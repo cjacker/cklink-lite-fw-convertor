@@ -26,4 +26,10 @@ After programmed, connect the target device to STM32F103 as:
 | GND       | GND      |
 
 
+The pre-converted firmware is v2.36, if it is outdated, you can find latest 'cklink-lite.hex' firmware and convert it yourself as:
+
+```
+./cklink-lite-fw-convertor <hex file>
+```
+
 
