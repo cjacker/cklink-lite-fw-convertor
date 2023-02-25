@@ -1,0 +1,48 @@
+#!/bin/bash
+# if no arg,
+if [ $# -ne 1 ]; then
+  echo "Convert CK-Link Lite firmware for stm32f103"
+  echo ""
+  echo "Usage: ./cklink-lite-fw-convertor cklink_lite.hex"
+  echo ""
+  echo "'cklink_lite.hex' can be found in C-Sky debug server."
+  exit
+fi
+
+CKLINK_FILE_NAME="$1"
+
+# final result filename
+RESULT_FILE_NAME=$(basename -s .hex $CKLINK_FILE_NAME)"_for-stm32f103.hex"
+
+# find first line with address 0x41XX
+F_LINE=$(cat $CKLINK_FILE_NAME|grep "^:1041" --line-number|head -n 1|cut -d':' -f1)
+
+# all lines we need to copy
+HEAD_LINES=$(expr $F_LINE - 1)
+
+# tmp file to save to
+TMP_FILE=$(mktemp)
+
+# tmp file to convert to
+TMP_FILE2=$(mktemp)
+
+# dump all lines need to be handled to TMP_FILE
+head -n $HEAD_LINES "$1" >$TMP_FILE
+
+# move the adress from 0x40XX to 0x00XX
+sed -i "s/^:1040/:1000/g" $TMP_FILE
+
+# update chksum of everyline.
+python ./intelchksum.py -i $TMP_FILE -o $TMP_FILE2
+
+rm -f $RESULT_FILE_NAME
+
+# merge converted and original file together
+cat $TMP_FILE2 >$RESULT_FILE_NAME
+cat "$1" >> $RESULT_FILE_NAME
+
+# drop tmp files.
+rm -f $TMP_FILE
+rm -f $TMP_FILE2
+
+echo "'$1' converted and saved as '$RESULT_FILE_NAME'"
