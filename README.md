@@ -2,6 +2,10 @@
 
 'cklink_lite.hex' shipped with C-Sky debug server can be programmed to STM32F103 bluepill to make your own CK-Link lite debugger. CK-Link debugger can be used with C-Sky series MCU and RISC-V series MCU / CPU from T-Head. 
 
+For C-Sky XT804 MCU tutorial, refer to : https://github.com/cjacker/opensource-toolchain-w80x
+For Bouffalo Lab BL series MCU based on T-Head RISC-V cores, refer to : https://github.com/cjacker/opensource-toolchain-bouffalo-lab
+
+
 The 'cklink_lite.hex' is designed to work with 'cklink_lite_iap.hex' (address range from 0x0800_0000 to 0x0800_4000). due to the circuit differences between Official CKLink lite debugger and STM32F103 bluepill, IAP bootloader + 'cklink_lite.hex' not works with STM32F103.
 
 The firmware need changed to copy the vector table to the beginning of FLASH, then it can be used standalone without requirement to 'cklink_lite_iap.hex'.
